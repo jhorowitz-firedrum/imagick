@@ -4923,6 +4923,56 @@ PHP_METHOD(imagick, paintopaqueimage)
 #endif // #if MagickLibVersion < 0x700
 #endif
 
+#if MagickLibVersion > 0x626
+/* {{{ proto Imagick Imagick::optimizePlusImageLayers()
+	Is exactly as Imagick::optimizeImageLayers(), but may also add or even remove extra frames in the animation, if it improves the total number of pixels in the resulting GIF animation.
+*/
+PHP_METHOD(imagick, optimizeplusimagelayers)
+{
+	MagickWand *tmp_wand;
+	php_imagick_object *intern, *intern_return;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+
+	intern = Z_IMAGICK_P(getThis());
+	if (php_imagick_ensure_not_empty (intern->magick_wand) == 0)
+		return;
+
+	ExceptionInfo *exception = AcquireExceptionInfo();
+	Image *optimize_image = OptimizePlusImageLayers(GetImageFromMagickWand(intern->magick_wand), exception);
+	if (optimize_image == (Image *) NULL) {
+		tmp_wand = NULL;
+	} else {
+		tmp_wand = CloneMagickWand(intern->magick_wand);
+		size_t number_images = MagickGetNumberImages(tmp_wand);
+		while (number_images > 1) {
+			MagickRemoveImage(tmp_wand);
+			number_images--;
+		}
+		MagickWand* tmp_wand2 = NewMagickWandFromImage(optimize_image);
+		MagickSetImage(tmp_wand, tmp_wand2);
+		DestroyMagickWand(tmp_wand2);
+		DestroyImageList(optimize_image);
+	}
+
+	if (tmp_wand == NULL) {
+		php_imagick_convert_imagick_exceptioninfo(exception, "OptimizePlus image layers failed" TSRMLS_CC);
+		exception = DestroyExceptionInfo(exception);
+		return;
+	}
+	exception = DestroyExceptionInfo(exception);
+
+	object_init_ex(return_value, php_imagick_sc_entry);
+	intern_return = Z_IMAGICK_P(return_value);
+	php_imagick_replace_magickwand(intern_return, tmp_wand);
+
+	return;
+}
+/* }}} */
+#endif
+
 #if MagickLibVersion > 0x628
 /* {{{ proto Imagick Imagick::optimizeImageLayers()
 	Compares each image the GIF disposed forms of the previous image in the sequence.  From this it attempts to select the smallest cropped image to replace each frame, while preserving the results of the animation.

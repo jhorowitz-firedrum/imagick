@@ -2243,6 +2243,9 @@ static zend_function_entry php_imagickpixel_class_methods[] =
 
 static zend_function_entry php_imagick_class_methods[] =
 {
+#if MagickLibVersion > 0x626
+	PHP_ME(imagick, optimizeplusimagelayers, imagick_zero_args, ZEND_ACC_PUBLIC)
+#endif
 #if MagickLibVersion > 0x628
 	PHP_ME(imagick, optimizeimagelayers, imagick_zero_args, ZEND_ACC_PUBLIC)
 	PHP_ME(imagick, compareimagelayers, imagick_compareimagelayers_args, ZEND_ACC_PUBLIC)

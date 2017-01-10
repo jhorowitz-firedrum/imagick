@@ -719,6 +719,30 @@ void s_convert_exception (char *description, const char *default_message, long s
 }
 
 /**
+	Convert image magick ExceptionInfo to PHP exception
+*/
+void php_imagick_convert_imagick_exceptioninfo (ExceptionInfo *exception, const char *default_message TSRMLS_DC)
+{
+	ExceptionType severity = exception->severity;
+	char *description;
+
+	description = (char *) AcquireQuantumMemory(2UL*MagickPathExtent, sizeof(*description));
+	if (description != (char *) NULL) {
+		*description='\0';
+		if (exception->reason != (char *) NULL) {
+			(void) CopyMagickString(description, GetLocaleExceptionMessage(exception->severity, exception->reason), MagickPathExtent);
+			if (exception->description != (char *) NULL) {
+				(void) ConcatenateMagickString(description, " (", MagickPathExtent);
+				(void) ConcatenateMagickString(description, GetLocaleExceptionMessage(exception->severity, exception->description), MagickPathExtent);
+				(void) ConcatenateMagickString(description, ")", MagickPathExtent);
+			}
+		}
+	}
+
+	s_convert_exception (description, default_message, severity, 1 TSRMLS_CC);
+}
+
+/**
 	Convert image magick MagickWand exception to PHP exception
 */
 void php_imagick_convert_imagick_exception (MagickWand *magick_wand, const char *default_message TSRMLS_DC)

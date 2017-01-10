@@ -1,4 +1,6 @@
 3.4.4
+- Added:
+  * Imagick::optimizePlusImageLayers() : Imagick
 - Fixes:
   * Imagick::getRegistry() now throws an exception if the key does not exist, rather than terminating the program.
 

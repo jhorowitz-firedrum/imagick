@@ -389,6 +389,9 @@ extern zend_class_entry *php_imagickkernel_exception_class_entry;
 /* Forward declarations (Imagick) */
 
 /* The conditional methods */
+#if MagickLibVersion > 0x626
+PHP_METHOD(imagick, optimizeplusimagelayers);
+#endif
 #if MagickLibVersion > 0x628
 PHP_METHOD(imagick, pingimageblob);
 PHP_METHOD(imagick, pingimagefile);
