@@ -2248,6 +2248,7 @@ static zend_function_entry php_imagick_class_methods[] =
 #endif
 #if MagickLibVersion > 0x628
 	PHP_ME(imagick, optimizeimagelayers, imagick_zero_args, ZEND_ACC_PUBLIC)
+	PHP_ME(imagick, optimizeimagetransparency, imagick_zero_args, ZEND_ACC_PUBLIC)
 	PHP_ME(imagick, compareimagelayers, imagick_compareimagelayers_args, ZEND_ACC_PUBLIC)
 	PHP_ME(imagick, pingimageblob, imagick_pingimageblob_args, ZEND_ACC_PUBLIC)
 	PHP_ME(imagick, pingimagefile, imagick_pingimagefile_args, ZEND_ACC_PUBLIC)

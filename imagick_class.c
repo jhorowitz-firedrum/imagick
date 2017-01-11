@@ -5005,6 +5005,35 @@ PHP_METHOD(imagick, optimizeimagelayers)
 }
 /* }}} */
 
+/* {{{ proto bool Imagick::optimizeImageTransparency()
+	Takes a frame optimized GIF animation, and compares the overlayed pixels against the disposal image resulting from all the previous frames in the animation.  Any pixel that does not change the disposal image (and thus does not effect the outcome of an overlay) is made transparent.
+*/
+PHP_METHOD(imagick, optimizeimagetransparency)
+{
+	MagickWand *tmp_wand;
+	MagickBooleanType status;
+	php_imagick_object *intern, *intern_return;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+
+	intern = Z_IMAGICK_P(getThis());
+	if (php_imagick_ensure_not_empty (intern->magick_wand) == 0)
+		return;
+
+	status = MagickOptimizeImageTransparency(intern->magick_wand);
+
+	/* No magick is going to happen */
+	if (status == MagickFalse) {
+		php_imagick_convert_imagick_exception(intern->magick_wand, "Optimize image transparency failed" TSRMLS_CC);
+		return;
+	}
+
+	RETURN_TRUE;
+}
+/* }}} */
+
 #if !defined(MAGICKCORE_EXCLUDE_DEPRECATED)
 #if MagickLibVersion < 0x700
 /* {{{ proto bool Imagick::paintTransparentImage(ImagickPixel target, float alpha, float fuzz)
