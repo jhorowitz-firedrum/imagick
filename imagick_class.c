@@ -4945,15 +4945,26 @@ PHP_METHOD(imagick, optimizeplusimagelayers)
 	if (optimize_image == (Image *) NULL) {
 		tmp_wand = NULL;
 	} else {
+		// Until MagickWand gains a direct API call to OptimizePlusImageLayers, we have to be a bit inefficient here...
 		tmp_wand = CloneMagickWand(intern->magick_wand);
+
+		// Remove the clone of the original image list 
 		size_t number_images = MagickGetNumberImages(tmp_wand);
-		while (number_images > 1) {
+		while (number_images > 0) {
 			MagickRemoveImage(tmp_wand);
 			number_images--;
 		}
-		MagickWand* tmp_wand2 = NewMagickWandFromImage(optimize_image);
-		MagickSetImage(tmp_wand, tmp_wand2);
-		DestroyMagickWand(tmp_wand2);
+
+		// Create a new wand for each image in the optimized image list, and add it to the cloned wand
+		size_t number_of_optimize_images = GetImageListLength(optimize_image);
+		size_t optimize_image_index = 0;
+		for (; optimize_image_index < number_of_optimize_images; optimize_image_index++) {
+			MagickWand *tmp_wand2 = NewMagickWandFromImage(GetImageFromList(optimize_image, optimize_image_index));
+			MagickAddImage(tmp_wand, tmp_wand2);
+			DestroyMagickWand(tmp_wand2);
+		}
+
+		// We cloned each image into the new wand, so destroy the optimized image list
 		DestroyImageList(optimize_image);
 	}
 
