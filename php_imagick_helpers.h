@@ -68,6 +68,7 @@ void php_imagick_pixel_iterator_new (PixelIterator *pixel_it, zval *return_value
 /*
   Convert ImageMagick exception types to PHP exceptions
 */
+void php_imagick_convert_imagick_exceptioninfo (ExceptionInfo *exception, const char *default_message TSRMLS_DC);
 void php_imagick_convert_imagick_exception (MagickWand *magick_wand, const char *default_message TSRMLS_DC);
 void php_imagick_convert_imagickdraw_exception (DrawingWand *drawing_wand, const char *default_message TSRMLS_DC);
 void php_imagick_convert_imagickpixeliterator_exception (PixelIterator *pixel_iterator, const char *default_message TSRMLS_DC);

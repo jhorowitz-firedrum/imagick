@@ -19,13 +19,13 @@
 #include "php_imagick_helpers.h"
 #include "php_imagick_file.h"
 
-//derprecated 
+//deprecated 
 
 //MagickReduceNoiseImage
 //MagickMedianFilterImage
 //MagickRecolorImage
 
-//Mising
+//Missing
 //MagickSetImageBias
 //MagickSetImageClipMask
 
